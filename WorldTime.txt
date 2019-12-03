@@ -1,0 +1,522 @@
+#pragma warning(disable:4996)
+#include <stdio.h>
+#include <string.h>
+
+struct informations {
+	char nation[20];
+	int date;
+	int time;
+	char type[10];
+};
+
+typedef struct informations information;
+
+int main(void)
+{
+	int mo_nth[12] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+	int mon_th[12] = { 31,29,31,30,31,30,31,31,30,31,30,31 };
+	int c_num, c_num2, day, time;
+	int a, b, c, d1, e, f, g, h;
+	int a2, b2, c2, d2, e2, f2, g2, h2;
+	char city[10], t_type[10], kcity[10];
+	int y, m, d, year, month;
+	int count1 = 0, count2 = 0, semi_total1, semi_total2, total_year, total_month = 0, total_day;
+	int final_day = 0;
+	int r_count1 = 0, r_count2 = 0, r_total_year = 0, r_total_year2 = 0, r_total_month = 0, r_total_month2 = 0;
+	int finalday, start_year, start_month, start_day;
+	int i, j;
+	int changeday;
+
+	informations inform;
+
+	printf("도시 날짜 시간을 입력하세요(ex. 서울 20161121 0330 pm): \n");
+	scanf("%s %d %d %s", &inform.nation, &inform.date, &inform.time, &inform.type);
+
+	time = int(inform.time);
+	day = int(inform.date);
+	y = day / 10000;
+	m = (day / 100) % 100;
+	d = day % 100;
+
+	if ((((y % 4 == 0) && ((y % 100 != 0) || (y % 400 == 0))) && (m == 2 && d>29)) || y<1 || m<1 || d<1 || (((y % 4 != 0) || (y % 100 == 0))) && (m == 2 && d>28))
+		printf("오류 %d. %02d. %02d\n", y, m, d);
+	else
+	{
+		for (year = 1; year<y; year++)
+		{
+			if ((year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0)))
+				count1 += 1;
+			else
+				count2 += 1;
+		}
+		semi_total1 = count1 * 366;
+		semi_total2 = count2 * 365;
+		total_year = semi_total1 + semi_total2; //입력한 년의 전년도까지 일 수
+
+		for (month = 1; month<m; month++)
+		{
+			if ((y % 4 == 0) && ((y % 100 != 0) || (y % 400 == 0)))
+				total_month = total_month + mon_th[month - 1];
+			else
+				total_month = total_month + mo_nth[month - 1];
+		}
+
+		total_day = total_year + total_month + d; // 전체 일 수 계산
+	}
+
+	printf("알고 싶은 도시를 입력하세요:\n");
+	scanf("%s", &kcity);
+
+	a = strcmp(inform.nation, "서울");
+	b = strcmp(inform.nation, "영국");
+	c = strcmp(inform.nation, "베이징");
+	d1 = strcmp(inform.nation, "모스크바");
+	e = strcmp(inform.nation, "두바이");
+	f = strcmp(inform.nation, "시드니");
+	g = strcmp(inform.nation, "LA");
+	h = strcmp(inform.nation, "NY");
+
+	if (a == 0)
+		c_num = 1;
+	if (b == 0)
+		c_num = 2;
+	if (c == 0)
+		c_num = 3;
+	if (d1 == 0)
+		c_num = 4;
+	if (e == 0)
+		c_num = 5;
+	if (f == 0)
+		c_num = 6;
+	if (g == 0)
+		c_num = 7;
+	if (h == 0)
+		c_num = 8;
+
+	a2 = strcmp(kcity, "서울");
+	b2 = strcmp(kcity, "영국");
+	c2 = strcmp(kcity, "베이징");
+	d2 = strcmp(kcity, "모스크바");
+	e2 = strcmp(kcity, "두바이");
+	f2 = strcmp(kcity, "시드니");
+	g2 = strcmp(kcity, "LA");
+	h2 = strcmp(kcity, "NY");
+
+	if (a2 == 0)
+		c_num2 = 1;
+	if (b2 == 0)
+		c_num2 = 2;
+	if (c2 == 0)
+		c_num2 = 3;
+	if (d2 == 0)
+		c_num2 = 4;
+	if (e2 == 0)
+		c_num2 = 5;
+	if (f2 == 0)
+		c_num2 = 6;
+	if (g2 == 0)
+		c_num2 = 7;
+	if (h2 == 0)
+		c_num2 = 8;
+
+	if (strcmp(inform.type, "pm") == 0)
+		time = time + 1200;
+
+	if (c_num == 1)
+	{
+		if (time >= 900)
+		{
+			time = time - 900;
+
+			if (time>1200)
+			{
+				inform.type[0] = 'p';
+				time = time - 1200;
+			}
+			else
+			{
+				inform.type[0] = 'a';
+			}
+		}
+		else
+		{
+			time = time + 300;
+			inform.type[0] = 'p';
+			total_day--;//날짜 바꿔야됨-
+		}
+	}
+	else if (c_num == 2)
+	{
+		if (time >= 1200)
+			time = time - 1200;
+	}
+	else if (c_num == 3)
+	{
+		if (time >= 800)
+		{
+			time = time - 800;
+
+			if (time>1200)
+			{
+				inform.type[0] = 'p';
+				time = time - 1200;
+			}
+			else
+			{
+				inform.type[0] = 'a';
+			}
+		}
+		else
+		{
+			time = time + 400;
+			inform.type[0] = 'p';
+			total_day--;//날짜 바꿔야됨-
+		}
+	}
+	else if (c_num == 4)
+	{
+		if (time >= 300)
+		{
+			time = time - 300;
+
+			if (time>1200)
+			{
+				inform.type[0] = 'p';
+				time = time - 1200;
+			}
+			else
+			{
+				inform.type[0] = 'a';
+			}
+		}
+		else
+		{
+			time = time + 900;
+			inform.type[0] = 'p';
+			total_day--;//날짜 바꿔야됨-
+		}
+	}
+	else if (c_num == 5)
+	{
+		if (time >= 400)
+		{
+			time = time - 400;
+
+			if (time>1200)
+			{
+				inform.type[0] = 'p';
+				time = time - 1200;
+			}
+			else
+			{
+				inform.type[0] = 'a';
+			}
+		}
+		else
+		{
+			time = time + 800;
+			inform.type[0] = 'p';
+			total_day--;//날짜 바꿔야됨-
+		}
+	}
+	else if (c_num == 6)
+	{
+		if (time >= 100)
+		{
+			time = time - 100;
+
+			if (time>1200)
+			{
+				inform.type[0] = 'p';
+				time = time - 1200;
+			}
+			else
+			{
+				inform.type[0] = 'a';
+			}
+		}
+		else
+		{
+			time = time + 1100;
+			inform.type[0] = 'p';
+			total_day--;//날짜 바꿔야됨-
+		}
+	}
+	else if (c_num == 7)
+	{
+		if (time >= 1600)
+		{
+			time = time - 1600;
+			inform.type[0] = 'a';
+			total_day++;//날짜 바꿔야됨+
+		}
+		else if (400 <= time<1600)
+		{
+			time = time - 400;
+			inform.type[0] = 'p';
+		}
+		else if (time<400)
+		{
+			time = time + 800;
+			inform.type[0] = 'a';
+		}
+	}
+	else if (c_num == 8)
+	{
+		if (time >= 1900)
+		{
+			time = time - 1900;
+			inform.type[0] = 'a';
+			total_day++;//날짜 바꿔야됨+
+		}
+		else if (700 <= time<1900)
+		{
+			time = time - 700;
+			inform.type[0] = 'p';
+		}
+		else if (time<700)
+		{
+			time = time + 500;
+			inform.type[0] = 'a';
+		}
+	}
+
+	if (strcmp(inform.type, "pm") == 0)
+		time = time + 1200;
+
+	if (c_num2 == 1)
+	{
+		if (time >= 1500)
+		{
+			time = time - 1500;
+			inform.type[0] = 'a';
+			total_day++;
+		}
+		else if (300 <= time<1500)
+		{
+			time = time - 300;
+			inform.type[0] = 'p';
+		}
+		else if (time<300)
+		{
+			time = time + 900;
+			inform.type[0] = 'a';
+		}
+	}
+	else if (c_num2 == 2)
+	{
+		if (time>1200)
+			time = time - 1200;
+	}
+	else if (c_num2 == 3)
+	{
+		if (time >= 1600)
+		{
+			time = time - 1600;
+			inform.type[0] = 'a';
+			total_day++;
+		}
+		else if (400 <= time<1600)
+		{
+			time = time - 400;
+			inform.type[0] = 'p';
+		}
+		else if (time<400)
+		{
+			time = time + 800;
+			inform.type[0] = 'a';
+		}
+	}
+	else if (c_num2 == 4)
+	{
+		if (time >= 2100)
+		{
+			time = time - 2100;
+			inform.type[0] = 'a';
+			total_day++;
+		}
+		else if (900 <= time<2100)
+		{
+			time = time - 900;
+			inform.type[0] = 'p';
+		}
+		else if (time<900)
+		{
+			time = time + 300;
+			inform.type[0] = 'a';
+		}
+	}
+	else if (c_num2 == 5)
+	{
+		if (time >= 2000)
+		{
+			time = time - 2000;
+			inform.type[0] = 'a';
+			total_day++;
+		}
+		else if (800 <= time<2000)
+		{
+			time = time - 800;
+			inform.type[0] = 'p';
+		}
+		else if (time<800)
+		{
+			time = time + 400;
+			inform.type[0] = 'a';
+		}
+	}
+	else if (c_num2 == 6)
+	{
+		if (time >= 2300)
+		{
+			time = time - 2300;
+			inform.type[0] = 'a';
+			total_day++;
+		}
+		else if (1100 <= time<2300)
+		{
+			time = time - 1100;
+			inform.type[0] = 'p';
+		}
+		else if (time<1100)
+		{
+			time = time + 100;
+			inform.type[0] = 'a';
+		}
+	}
+	else if (c_num2 == 7)
+	{
+		if (time >= 800)
+		{
+			time = time - 800;
+
+			if (time>1200)
+			{
+				inform.type[0] = 'p';
+				time = time - 1200;
+			}
+			else
+			{
+				inform.type[0] = 'a';
+			}
+		}
+		else
+		{
+			time = time + 400;
+			inform.type[0] = 'p';
+			total_day--;//날짜 바꿔야됨-
+		}
+	}
+	else if (c_num2 == 8)
+	{
+		if (time >= 500)
+		{
+			time = time - 500;
+
+			if (time>1200)
+			{
+				inform.type[0] = 'p';
+				time = time - 1200;
+			}
+			else
+			{
+				inform.type[0] = 'a';
+			}
+		}
+		else
+		{
+			time = time + 700;
+			inform.type[0] = 'p';
+			total_day--;//날짜 바꿔야됨-
+		}
+	}
+
+	for (i = 1; ; )
+	{
+		if ((i % 4 == 0) && ((i % 100 != 0) || (i % 400 == 0)))
+			r_total_year2 += 366;
+		else
+			r_total_year2 += 365;
+
+		if (total_day - r_total_year2<366)
+		{
+			finalday = total_day - r_total_year2;
+			break;
+		}
+		else
+		{
+			i++;
+		}
+
+	}
+
+	start_year = i + 1;
+
+	if (finalday>31)
+	{
+		for (j = 1; ; )
+		{
+			if ((start_year % 4 == 0) && ((start_year % 100 != 0) || (start_year % 400 == 0)))
+			{
+				r_total_month2 += mon_th[j - 1];
+
+				if (finalday - r_total_month2<mon_th[j])
+				{
+					if (finalday - r_total_month2 == 0)
+					{
+						start_day = mon_th[j - 1];
+						start_month = j;
+					}
+					else
+					{
+						start_day = finalday - r_total_month2;
+						start_month = j + 1;
+					}
+					break;
+				}
+				else
+					j++;
+			}
+			else
+			{
+				r_total_month2 += mo_nth[j - 1];
+
+				if (finalday - r_total_month2<mon_th[j])
+				{
+					if (finalday - r_total_month2 == 0)
+					{
+						start_day = mo_nth[j - 1];
+						start_month = j;
+					}
+					else
+					{
+						start_day = finalday - r_total_month2;
+						start_month = j + 1;
+					}
+
+					break;
+				}
+				else
+					j++;
+			}
+		}
+	}
+
+	else if (finalday == 0)
+	{
+		start_year--;
+		start_month = 12;
+		start_day = 31;
+	}
+	else
+	{
+		start_month = 1;
+		start_day = finalday;
+	}
+
+	changeday = start_year * 10000 + start_month * 100 + start_day;
+
+	printf("%s %d %04d %s\n", kcity, changeday, time, inform.type);
+
+	return 0;
+}
